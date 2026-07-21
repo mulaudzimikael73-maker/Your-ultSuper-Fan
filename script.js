@@ -27,6 +27,35 @@ const secretButton = document.getElementById("secretButton");
 let progress = 0;
 
 // =============================================
+// EMAILJS
+// =============================================
+
+function sendYesEmail() {
+
+    emailjs.send(
+        "service_z3hw048",
+        "template_r1hoybt",
+        {
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            device: navigator.platform,
+            browser: navigator.userAgent
+        }
+    )
+    .then(() => {
+
+        console.log("Email sent successfully!");
+
+    })
+    .catch((error) => {
+
+        console.error("Email failed:", error);
+
+    });
+
+}
+
+// =============================================
 // Loading Screen
 // =============================================
 
@@ -331,33 +360,6 @@ noButton.addEventListener("mouseover", moveButton);
 
 noButton.addEventListener("click", moveButton);
 
-// =============================================
-// YES BUTTON
-// =============================================
-
-yesButton.addEventListener("click", () => {
-
-    hideAll();
-
-    celebration.classList.remove("hidden");
-
-    updateProgress();
-
-    if(typeof confetti === "function"){
-
-        confetti({
-
-            particleCount:250,
-
-            spread:180,
-
-            origin:{y:0.6}
-
-        });
-
-    }
-
-});
 
 // ========================================
 // RIDDLE CARDS
@@ -477,12 +479,29 @@ startStory.addEventListener("click",()=>{
 
 });
 
-yesButton.addEventListener("click",()=>{
+yesButton.addEventListener("click", () => {
+
+    sendYesEmail();
+
+    hideAll();
+
+    celebration.classList.remove("hidden");
+
+    updateProgress();
+
+    if (typeof confetti === "function") {
+
+        confetti({
+            particleCount: 250,
+            spread: 180,
+            origin: { y: 0.6 }
+        });
+
+    }
 
     unlockAchievement("Date Accepted ❤️");
 
 });
-
 secretButton.addEventListener("click",()=>{
 
     unlockAchievement("Secret Ending 🌸");
