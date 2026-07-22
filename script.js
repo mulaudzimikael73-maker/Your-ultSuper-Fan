@@ -32,29 +32,34 @@ let progress = 0;
 
 function sendYesEmail() {
 
-    emailjs.send(
-        "service_z3hw048",
-        "template_r1hoybt",
-        {
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString(),
-            device: navigator.platform,
-            browser: navigator.userAgent
-        }
-    )
+    fetch("https://formspree.io/f/mzdnaree", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            message: "🎉 Lizzy clicked YES! ❤️"
+
+        })
+
+    })
     .then(() => {
 
-        console.log("Email sent successfully!");
+        console.log("✅ Formspree notification sent!");
 
     })
     .catch((error) => {
 
-        console.error("Email failed:", error);
+        console.error("❌ Formspree Error:", error);
 
     });
 
 }
-
 // =============================================
 // Loading Screen
 // =============================================
