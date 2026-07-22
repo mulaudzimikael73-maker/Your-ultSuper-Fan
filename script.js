@@ -710,7 +710,8 @@ const archiveItems = [
 
     "She's a real gangster",
 
-    "She claims she can sing"
+    "She claims she can sing",
+
     "She is a Baddie"
 
 ];
