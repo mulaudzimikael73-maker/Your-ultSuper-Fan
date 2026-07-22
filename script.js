@@ -224,7 +224,7 @@ function loadQuestion(){
 
         nextQuestion();
 
-    }, 4200);
+    }, 1200);
 
 };
 
@@ -711,6 +711,7 @@ const archiveItems = [
     "She's a real gangster",
 
     "She claims she can sing"
+    "She is a Baddie"
 
 ];
 
