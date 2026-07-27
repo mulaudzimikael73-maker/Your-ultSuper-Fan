@@ -951,3 +951,53 @@ memories.forEach((memory, index) => {
 }
 
 loadReadMe();
+
+function openReadMeViewer(index, memories) {
+
+    const memory = memories[index];
+
+    const overlay = document.createElement("div");
+
+    overlay.className = "readme-viewer";
+
+    if (memory.type === "image") {
+
+        overlay.innerHTML = `
+            <button class="readme-viewer-close">✕</button>
+
+            <img src="${memory.url}">
+        `;
+
+    } else {
+
+        overlay.innerHTML = `
+            <button class="readme-viewer-close">✕</button>
+
+            <video controls autoplay>
+
+                <source src="${memory.url}">
+
+            </video>
+        `;
+
+    }
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelector(".readme-viewer-close").onclick = () => {
+
+        overlay.remove();
+
+    };
+
+    overlay.onclick = (e) => {
+
+        if (e.target === overlay) {
+
+            overlay.remove();
+
+        }
+
+    };
+
+}

@@ -1925,3 +1925,49 @@ color:#ff5ca8;
 
     cursor:pointer;
 }
+
+/* ===========================
+   READ ME WINDOW FIXES
+=========================== */
+
+#readMeWindow{
+    width:min(920px,92vw);
+    max-height:90vh;
+    overflow:hidden;
+}
+
+#readMeContent{
+    max-height:68vh;
+    overflow-y:auto;
+    align-content:start;
+    scrollbar-gutter:stable;
+}
+
+.readme-item{
+    min-width:0;
+    overflow:hidden;
+}
+
+.readme-photo,
+.readme-video{
+    width:100%;
+    max-height:420px;
+    object-fit:cover;
+}
+
+.readme-video{
+    display:block !important;
+}
+
+@media(max-width:600px){
+    #readMeWindow{
+        width:94vw;
+        padding:22px;
+    }
+
+    #readMeContent{
+        grid-template-columns:1fr;
+        padding:10px;
+        max-height:66vh;
+    }
+}
