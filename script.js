@@ -903,23 +903,39 @@ async function loadReadMe() {
             const item = document.createElement("div");
             item.className = "readme-item";
 
-            if (memory.type === "image") {
+            if(memory.type==="image"){
 
-                item.innerHTML = `
-                    <img src="${memory.url}" class="readme-photo">
-                `;
+    item.innerHTML=`
 
-            }
+        <img class="readme-photo"
 
-            if (memory.type === "video") {
+        src="${memory.url}"
 
-                item.innerHTML = `
-                    <video controls class="readme-video">
-                        <source src="${memory.url}">
-                    </video>
-                `;
+        loading="lazy">
 
-            }
+    `;
+
+}
+
+if(memory.type==="video"){
+
+    item.innerHTML=`
+
+        <video
+
+            class="readme-video"
+
+            controls
+
+            preload="metadata">
+
+            <source src="${memory.url}">
+
+        </video>
+
+    `;
+
+}
 
             container.appendChild(item);
 
