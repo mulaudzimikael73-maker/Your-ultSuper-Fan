@@ -2,61 +2,96 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "assets/gallery"
-public_folder: "/assets/gallery"
-
-site_url: "https://yourultsuperfan.netlify.app"
-display_url: "https://yourultsuperfan.netlify.app"
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
 
 collections:
+
+  # -------------------------
+  # Gallery
+  # -------------------------
   - name: "gallery"
-    label: "📷 Gallery"
+    label: "📸 Gallery"
     folder: "content/gallery"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
 
     fields:
-      - label: "Photo"
-        name: "image"
-        widget: "image"
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Photo", name: "image", widget: "image"}
+      - {label: "Caption", name: "caption", widget: "markdown", required: false}
 
-      - label: "Caption"
-        name: "caption"
-        widget: "string"
-
+  # -------------------------
+  # Videos
+  # -------------------------
   - name: "videos"
     label: "🎥 Videos"
     folder: "content/videos"
     create: true
+    slug: "{{slug}}"
 
     fields:
-      - label: "Video"
-        name: "video"
-        widget: "file"
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Video", name: "video", widget: "file"}
+      - {label: "Caption", name: "caption", widget: "markdown", required: false}
 
-      - label: "Title"
-        name: "title"
-        widget: "string"
-
+  # -------------------------
+  # Archives
+  # -------------------------
   - name: "archives"
-    label: "💗 Lizzy Archives"
+    label: "📁 Archives"
     folder: "content/archives"
     create: true
+    slug: "{{slug}}"
 
     fields:
-      - label: "Memory"
-        name: "memory"
-        widget: "text"
+      - {label: "Title", name: "title", widget: "string"}
 
-  - name: "letter"
+      - label: "Type"
+        name: "type"
+        widget: "select"
+        options:
+          - Photo
+          - Video
+
+      - {label: "Photo", name: "image", widget: "image", required: false}
+      - {label: "Video", name: "video", widget: "file", required: false}
+      - {label: "Story", name: "body", widget: "markdown"}
+
+  # -------------------------
+  # Read Me
+  # -------------------------
+  - name: "readme"
     label: "❤️ Read Me"
+    folder: "content/readme"
+    create: true
+    slug: "{{slug}}"
+
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+
+      - label: "Type"
+        name: "type"
+        widget: "select"
+        options:
+          - Photo
+          - Video
+
+      - {label: "Photo", name: "image", widget: "image", required: false}
+      - {label: "Video", name: "video", widget: "file", required: false}
+      - {label: "Message", name: "body", widget: "markdown"}
+
+  # -------------------------
+  # Settings
+  # -------------------------
+  - name: "settings"
+    label: "⚙️ Settings"
 
     files:
-      - label: "Read Me"
-        name: "readme"
-        file: "content/settings/readme.md"
+      - file: "content/settings/readme.md"
+        label: "Website Settings"
+        name: "settings"
 
         fields:
-          - label: "Message"
-            name: "body"
-            widget: "markdown"
+          - {label: "Welcome Title", name: "title", widget: "string"}
+          - {label: "Welcome Message", name: "body", widget: "markdown"}
