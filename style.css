@@ -1812,3 +1812,43 @@ color:#ff5ca8;
 .riddleAnswer.hidden{
     display:none;
 }
+
+/* ===========================
+   Read Me Gallery
+=========================== */
+
+#readMeContent{
+
+    max-height:70vh;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    padding:15px;
+
+}
+
+.readme-photo{
+
+    width:100%;
+
+    border-radius:18px;
+
+    display:block;
+
+}
+
+.readme-video{
+
+    width:100%;
+
+    border-radius:18px;
+
+    display:block;
+
+}

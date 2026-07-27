@@ -880,3 +880,61 @@ document.addEventListener("keydown",(e)=>{
     }
 
 });
+
+// =========================
+// Read Me Loader
+// =========================
+
+async function loadReadMe() {
+
+    const container = document.getElementById("readMeContent");
+
+    if (!container) return;
+
+    try {
+
+        const response = await fetch("data/readme.json");
+        const memories = await response.json();
+
+        container.innerHTML = "";
+
+        memories.forEach(memory => {
+
+            const item = document.createElement("div");
+            item.className = "readme-item";
+
+            if (memory.type === "image") {
+
+                item.innerHTML = `
+                    <img src="${memory.url}" class="readme-photo">
+                `;
+
+            }
+
+            if (memory.type === "video") {
+
+                item.innerHTML = `
+                    <video controls class="readme-video">
+                        <source src="${memory.url}">
+                    </video>
+                `;
+
+            }
+
+            container.appendChild(item);
+
+        });
+
+    }
+
+    catch (err) {
+
+        container.innerHTML = "<p>Unable to load memories.</p>";
+
+        console.error(err);
+
+    }
+
+}
+
+loadReadMe();
