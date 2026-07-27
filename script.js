@@ -898,49 +898,46 @@ async function loadReadMe() {
 
         container.innerHTML = "";
 
-        memories.forEach(memory => {
+memories.forEach((memory, index) => {
 
-            const item = document.createElement("div");
-            item.className = "readme-item";
+    const item = document.createElement("div");
+    item.className = "readme-item";
 
-            if(memory.type==="image"){
+    if (memory.type === "image") {
 
-    item.innerHTML=`
+        item.innerHTML = `
+            <img
+                src="${memory.url}"
+                class="readme-photo"
+                loading="lazy"
+                alt="Memory">
+        `;
 
-        <img class="readme-photo"
+    }
 
-        src="${memory.url}"
+    if (memory.type === "video") {
 
-        loading="lazy">
+        item.innerHTML = `
+            <video
+                controls
+                class="readme-video">
 
-    `;
+                <source src="${memory.url}">
 
-}
+            </video>
+        `;
 
-if(memory.type==="video"){
+    }
 
-    item.innerHTML=`
+    item.addEventListener("click", function () {
 
-        <video
+        openReadMeViewer(index, memories);
 
-            class="readme-video"
+    });
 
-            controls
+    container.appendChild(item);
 
-            preload="metadata">
-
-            <source src="${memory.url}">
-
-        </video>
-
-    `;
-
-}
-
-            container.appendChild(item);
-
-        });
-
+});
     }
 
     catch (err) {
