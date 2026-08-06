@@ -584,13 +584,23 @@ const terminalText = document.getElementById("terminalText");
 
 const folderIcon = document.getElementById("folderIcon");
 const readMeIcon = document.getElementById("readMeIcon");
+const missionIcon = document.getElementById("missionIcon");
+const openWhenIcon = document.getElementById("openWhenIcon");
 
 const finderWindow = document.getElementById("finderWindow");
 const readMeWindow = document.getElementById("readMeWindow");
+const missionWindow = document.getElementById("missionWindow");
+const openWhenWindow = document.getElementById("openWhenWindow");
 
 const closeReadMe = document.getElementById("closeReadMe");
+const closeMission = document.getElementById("closeMission");
+const closeOpenWhen = document.getElementById("closeOpenWhen");
 
-const viewer = document.getElementById("viewer");
+const letterList = document.getElementById("letterList");
+const letterContent = document.getElementById("letterContent");
+const letterTitle = document.getElementById("letterTitle");
+const letterText = document.getElementById("letterText");
+const backLetters = document.getElementById("backLetters");const viewer = document.getElementById("viewer");
 const viewerImage = document.getElementById("viewerImage");
 const viewerVideo = document.getElementById("viewerVideo");
 
@@ -753,15 +763,18 @@ folderIcon.addEventListener("click",()=>{
 // READ ME
 // ========================================
 
-readMeIcon.addEventListener("click",()=>{
+readMeIcon?.addEventListener("click", () => {
 
-    readMeWindow.classList.remove("hidden");
+    readMeWindow?.classList.remove("hidden");
+
+    readMeIntro?.classList.remove("hidden");
+    readMeContent?.classList.add("hidden");
 
 });
 
-closeReadMe.addEventListener("click",()=>{
+closeReadMe?.addEventListener("click", () => {
 
-    readMeWindow.classList.add("hidden");
+    readMeWindow?.classList.add("hidden");
 
 });
 
@@ -774,64 +787,249 @@ document.getElementById("readMeIntro");
 const readMeContent =
 document.getElementById("readMeContent");
 
-openMemoriesButton.addEventListener("click",()=>{
+openMemoriesButton?.addEventListener("click", () => {
 
-    readMeIntro.classList.add("hidden");
-
-    readMeContent.classList.remove("hidden");
+    readMeIntro?.classList.add("hidden");
+    readMeContent?.classList.remove("hidden");
 
 });
+
+// ========================================
+// MISSION LOG
+// ========================================
+
+missionIcon?.addEventListener("click", () => {
+
+    missionWindow?.classList.remove("hidden");
+
+    unlockAchievement("Opened Mission Log 🗂️");
+
+});
+
+closeMission?.addEventListener("click", () => {
+
+    missionWindow?.classList.add("hidden");
+
+});
+
+// ========================================
+// OPEN WHEN...
+// ========================================
+
+openWhenIcon?.addEventListener("click", () => {
+
+    openWhenWindow?.classList.remove("hidden");
+
+    letterList?.classList.remove("hidden");
+    letterContent?.classList.add("hidden");
+
+    unlockAchievement("Opened Open When Folder 💌");
+
+});
+
+closeOpenWhen?.addEventListener("click", () => {
+
+    openWhenWindow?.classList.add("hidden");
+
+});
+
+backLetters?.addEventListener("click", () => {
+
+    letterContent?.classList.add("hidden");
+    letterList?.classList.remove("hidden");
+
+});
+
+const openWhenLetters = {
+
+    miss: {
+
+        title: "❤️ Open when you miss me",
+
+        body: `Hey Agent Yelizaveta,<br><br>
+
+If you're reading this because you miss me, just know that I'm probably thinking about you too.<br><br>
+
+Life gets busy sometimes, but that never changes how much I enjoy talking to you, laughing with you, and making memories with you.<br><br>
+
+In <em>The Office</em>, even the most ordinary workdays become special because of the people sharing them. You have a way of making ordinary moments feel like the ones worth remembering, and I hope I get to keep being part of yours.<br><br>
+
+Until our next mission...<br><br>
+
+Your favourite Rookie Operative,<br>
+
+<strong>Agent Mikhail Petrov ❤️</strong>`
+
+    },
+
+    amazing: {
+
+        title: "🌸 Open when you need reminding how amazing you are",
+
+        body: `Agent Yelizaveta,<br><br>
+
+In case today made you forget, you are incredibly kind, genuinely smart, unbelievably beautiful, absolutely stunning, and completely amazing.<br><br>
+
+You care about people in a way that makes them feel seen, and that kindness is one of the most special things about you.<br><br>
+
+Early in <em>Gilmore Girls</em>, Rory faces the intimidating first days at Chilton, but Lorelai keeps showing up for her and reminding her that she belongs there.<br><br>
+
+So consider this my reminder to you: you belong in every room you walk into, and you are capable of far more than you sometimes give yourself credit for.<br><br>
+
+Never let one difficult day convince you that you are anything less than extraordinary.<br><br>
+
+Whenever you forget, come back here. I'll happily remind you again.<br><br>
+
+<strong>— Agent Mikhail Petrov ❤️</strong>`
+
+    }
+
+};
+
+function showOpenWhenLetter(letterKey) {
+
+    const letter = openWhenLetters[letterKey];
+
+    if (!letter || !letterList || !letterContent) {
+
+        return;
+
+    }
+
+    letterTitle.innerHTML = letter.title;
+    letterText.innerHTML = letter.body;
+
+    letterList.classList.add("hidden");
+    letterContent.classList.remove("hidden");
+
+}
+
+document.querySelectorAll("[data-letter]").forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+        showOpenWhenLetter(button.dataset.letter);
+
+    });
+
+});
+
+window.openLetter = function (numberOrKey) {
+
+    if (
+        numberOrKey === 1 ||
+        numberOrKey === "1" ||
+        numberOrKey === "miss"
+    ) {
+
+        showOpenWhenLetter("miss");
+
+        return;
+
+    }
+
+    if (
+        numberOrKey === 2 ||
+        numberOrKey === "2" ||
+        numberOrKey === "amazing"
+    ) {
+
+        showOpenWhenLetter("amazing");
+
+    }
+
+};
 
 // ========================================
 // CLOSE FINDER
 // ========================================
 
-closeFinder.addEventListener("click",()=>{
+closeFinder?.addEventListener("click", () => {
 
-    finderWindow.classList.add("hidden");
+    finderWindow?.classList.add("hidden");
 
 });
-
 
 // ========================================
 // SECRET MESSAGE
 // ========================================
 
 // ========================================
-// MEDIA VIEWER (photos + videos)
+// MEDIA VIEWER
 // ========================================
 
-// Build one ordered list of every media item in the folder
-const mediaItems = [
+const archiveMediaItems = [
+
     ...document.querySelectorAll(".memoryGrid img"),
+
     ...document.querySelectorAll(".videoGrid video source")
-].map(el => {
-    if (el.tagName === "IMG") {
-        return { type: "image", src: el.getAttribute("src") };
-    } else {
-        return { type: "video", src: el.getAttribute("src") };
+
+].map((element) => {
+
+    if (element.tagName === "IMG") {
+
+        return {
+
+            type: "image",
+
+            url: element.getAttribute("src")
+
+        };
+
     }
+
+    return {
+
+        type: "video",
+
+        url: element.getAttribute("src")
+
+    };
+
 });
+
+let readMeMemories = [];
+
+let activeViewerItems = archiveMediaItems;
 
 let currentMediaIndex = 0;
 
-function openViewer(index){
+function openViewer(index, items = activeViewerItems) {
 
-    currentMediaIndex = index;
-    const item = mediaItems[currentMediaIndex];
+    if (!Array.isArray(items) || items.length === 0) {
 
-    if(item.type === "image"){
+        return;
 
-        viewerImage.src = item.src;
+    }
+
+    activeViewerItems = items;
+
+    currentMediaIndex =
+        (index + activeViewerItems.length) %
+        activeViewerItems.length;
+
+    const item = activeViewerItems[currentMediaIndex];
+
+    viewerImage.classList.add("hidden");
+    viewerVideo.classList.add("hidden");
+
+    viewerVideo.pause();
+    viewerVideo.removeAttribute("src");
+    viewerVideo.innerHTML = "";
+
+    if (item.type === "image") {
+
+        viewerImage.src = item.url || item.src;
+
         viewerImage.classList.remove("hidden");
-        viewerVideo.classList.add("hidden");
-        viewerVideo.pause();
 
-    } else {
+    } else if (item.type === "video") {
 
-        viewerVideo.src = item.src;
+        viewerVideo.src = item.url || item.src;
+
         viewerVideo.classList.remove("hidden");
-        viewerImage.classList.add("hidden");
+
+        viewerVideo.load();
 
     }
 
@@ -839,131 +1037,230 @@ function openViewer(index){
 
 }
 
-// Wire up every photo thumbnail
-document.querySelectorAll(".memoryGrid a").forEach((link, i) => {
+// Archive photos
 
-    link.addEventListener("click", (e) => {
+document
+.querySelectorAll(".memoryGrid a")
+.forEach((link, index) => {
 
-        e.preventDefault(); // stop it opening a raw new tab
-        openViewer(i);
+    link.addEventListener("click", (event) => {
+
+        event.preventDefault();
+
+        openViewer(index, archiveMediaItems);
 
     });
 
 });
 
-// Wire up every video thumbnail (videos come after photos in mediaItems)
-const photoCount = document.querySelectorAll(".memoryGrid img").length;
+// Archive videos
 
-document.querySelectorAll(".videoGrid video").forEach((videoEl, i) => {
+const archivePhotoCount =
+document.querySelectorAll(".memoryGrid img").length;
 
-    videoEl.addEventListener("click", () => {
+document
+.querySelectorAll(".videoGrid video")
+.forEach((video, index) => {
 
-        openViewer(photoCount + i);
+    video.addEventListener("click", () => {
+
+        openViewer(
+
+            archivePhotoCount + index,
+
+            archiveMediaItems
+
+        );
 
     });
 
 });
 
 // Viewer controls
-viewerClose.addEventListener("click", () => {
 
-    viewer.classList.add("hidden");
-    viewerVideo.pause();
+viewerClose?.addEventListener("click", () => {
 
-});
+    viewer?.classList.add("hidden");
 
-viewerNext.addEventListener("click", () => {
-
-    openViewer((currentMediaIndex + 1) % mediaItems.length);
+    viewerVideo?.pause();
 
 });
 
-viewerPrev.addEventListener("click", () => {
+viewerNext?.addEventListener("click", () => {
 
-    openViewer((currentMediaIndex - 1 + mediaItems.length) % mediaItems.length);
+    openViewer(
 
-});
+        currentMediaIndex + 1,
 
-document.addEventListener("keydown",(e)=>{
+        activeViewerItems
 
-    if(e.key==="Escape"){
-
-        viewer.classList.add("hidden");
-
-        finderWindow.classList.add("hidden");
-
-        readMeWindow.classList.add("hidden");
-
-    }
+    );
 
 });
 
-// =========================
-// Read Me Loader
-// =========================
+viewerPrev?.addEventListener("click", () => {
+
+    openViewer(
+
+        currentMediaIndex - 1,
+
+        activeViewerItems
+
+    );
+
+});
+
+// ========================================
+// READ ME LOADER
+// ========================================
 
 async function loadReadMe() {
 
-    const container = document.getElementById("readMeContent");
+    const container =
+    document.getElementById("readMeContent");
 
-    if (!container) return;
+    if (!container) {
+
+        return;
+
+    }
 
     try {
 
-        const response = await fetch("data/readme.json");
+        const response = await fetch(
+
+            "data/readme.json?v=" + Date.now(),
+
+            {
+
+                cache: "no-store"
+
+            }
+
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                `Could not load readme.json (${response.status})`
+
+            );
+
+        }
+
         const memories = await response.json();
+
+        if (!Array.isArray(memories)) {
+
+            throw new Error(
+
+                "readme.json must contain an array."
+
+            );
+
+        }
+
+        readMeMemories = memories;
 
         container.innerHTML = "";
 
-memories.forEach((memory, index) => {
+        memories.forEach((memory, index) => {
 
-    const item = document.createElement("div");
-    item.className = "readme-item";
+            const item =
+            document.createElement("div");
 
-    if (memory.type === "image") {
+            item.className = "readme-item";
 
-        item.innerHTML = `
-            <img
-                src="${memory.url}"
-                class="readme-photo"
-                loading="lazy"
-                alt="Memory">
-        `;
+            if (memory.type === "image") {
 
-    }
+                item.innerHTML = `
 
-    if (memory.type === "video") {
+                    <img
 
-        item.innerHTML = `
-            <video
-                controls
-                class="readme-video">
+                        src="${memory.url}"
 
-                <source src="${memory.url}">
+                        class="readme-photo"
 
-            </video>
-        `;
+                        loading="lazy"
 
-    }
+                        alt="Read Me memory">
 
-    item.addEventListener("click", function (e) {
+                `;
 
-    if(e.target.tagName === "VIDEO"){
-        return;
-    }
+                item.addEventListener("click", () => {
 
-});
+                    openViewer(
 
-    container.appendChild(item);
+                        index,
 
-});
-    }
+                        readMeMemories
 
-    catch (err) {
+                    );
 
-        container.innerHTML = "<p>Unable to load memories.</p>";
+                });
 
-        console.error(err);
+            } else if (memory.type === "video") {
+
+                item.innerHTML = `
+
+                    <video
+
+                        controls
+
+                        playsinline
+
+                        preload="metadata"
+
+                        class="readme-video">
+
+                        <source src="${memory.url}">
+
+                        Your browser could not play this video.
+
+                    </video>
+
+                `;
+
+                item.addEventListener("dblclick", () => {
+
+                    openViewer(
+
+                        index,
+
+                        readMeMemories
+
+                    );
+
+                });
+
+            }
+
+            container.appendChild(item);
+
+        });
+
+        if (memories.length === 0) {
+
+            container.innerHTML =
+
+            "<p>No memories have been added yet. ❤️</p>";
+
+        }
+
+    } catch (error) {
+
+        container.innerHTML =
+
+        "<p>Unable to load memories.</p>";
+
+        console.error(
+
+            "Read Me error:",
+
+            error
+
+        );
 
     }
 
@@ -971,3 +1268,66 @@ memories.forEach((memory, index) => {
 
 loadReadMe();
 
+// ========================================
+// KEYBOARD CONTROLS
+// ========================================
+
+document.addEventListener("keydown", (event) => {
+
+    if (event.key === "Escape") {
+
+        viewer?.classList.add("hidden");
+
+        viewerVideo?.pause();
+
+        finderWindow?.classList.add("hidden");
+
+        readMeWindow?.classList.add("hidden");
+
+        missionWindow?.classList.add("hidden");
+
+        openWhenWindow?.classList.add("hidden");
+
+    }
+
+    if (
+
+        event.key === "ArrowRight" &&
+
+        viewer &&
+
+        !viewer.classList.contains("hidden")
+
+    ) {
+
+        openViewer(
+
+            currentMediaIndex + 1,
+
+            activeViewerItems
+
+        );
+
+    }
+
+    if (
+
+        event.key === "ArrowLeft" &&
+
+        viewer &&
+
+        !viewer.classList.contains("hidden")
+
+    ) {
+
+        openViewer(
+
+            currentMediaIndex - 1,
+
+            activeViewerItems
+
+        );
+
+    }
+
+});

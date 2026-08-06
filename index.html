@@ -515,6 +515,22 @@
 
             </div>
 
+            <div class="desktopIcon" id="missionIcon">
+
+                <div class="desktopEmoji">🗂️</div>
+
+                <span>Mission Log</span>
+
+            </div>
+
+            <div class="desktopIcon" id="openWhenIcon">
+
+                <div class="desktopEmoji">💌</div>
+
+                <span>Open When...</span>
+
+            </div>
+
             <div class="desktopIcon">
 
                 <div class="desktopEmoji">🗑️</div>
@@ -608,6 +624,142 @@
     </button>
 
 </div>
+
+        <!-- Mission Log -->
+        <div id="missionWindow" class="desktopWindow hidden">
+
+            <div class="windowTop">
+                <div class="windowDots">
+                    <span class="windowCloseDot"></span>
+                    <span class="windowMinDot"></span>
+                    <span class="windowMaxDot"></span>
+                </div>
+                <h2>🗂️ Mission Log</h2>
+            </div>
+
+            <div class="windowScroll missionPaper">
+
+                <div class="classifiedHeader">
+                    <span>TOP SECRET</span>
+                    <h3>MISSION LOG</h3>
+                    <p>Security Clearance: LEVEL 7</p>
+                </div>
+
+                <div class="missionStatus">🟢 ACTIVE</div>
+
+                <section class="missionSection">
+                    <p class="missionLabel">MISSION #001</p>
+                    <h3>Operation: Strike Her Heart ❤️</h3>
+                    <p><strong>Location:</strong> Montecasino</p>
+                </section>
+
+                <section class="missionSection">
+                    <h3>🎯 Mission Brief</h3>
+                    <p>
+                        Agent Mikhail Petrov has officially accepted his first mission alongside
+                        <strong>Agent Yelizaveta</strong>. Intelligence reports indicate that Agent
+                        Yelizaveta possesses exceptional bowling abilities, placing Agent Petrov at
+                        a significant competitive disadvantage.
+                    </p>
+                    <p>
+                        Primary objectives include sharing plenty of laughs, creating the first
+                        official Mission Log memories, and surviving the scoreboard with dignity.
+                    </p>
+                    <p><strong>Success will be measured by the memories we create. ❤️</strong></p>
+                </section>
+
+                <div class="agentGrid">
+                    <article class="agentCard">
+                        <h3>👩 Agent Yelizaveta</h3>
+                        <p><strong>Role:</strong> Elite Operative</p>
+                        <p><strong>Bowling experience:</strong> Highly experienced</p>
+                        <p><strong>Mission difficulty:</strong> ⭐☆☆☆☆ Easy</p>
+                        <ul>
+                            <li>🎯 Precision accuracy</li>
+                            <li>💥 Consistent strikes</li>
+                            <li>😏 Highly competitive</li>
+                            <li>🏆 Expected to dominate the scoreboard</li>
+                        </ul>
+                    </article>
+
+                    <article class="agentCard">
+                        <h3>👨 Agent Mikhail Petrov</h3>
+                        <p><strong>Role:</strong> Rookie Operative</p>
+                        <p><strong>Bowling experience:</strong> One previous mission; results classified</p>
+                        <p><strong>Mission difficulty:</strong> ⭐⭐⭐⭐⭐ Legendary</p>
+                        <ul>
+                            <li>🎳 Limited field experience</li>
+                            <li>🤞 Hoping the ball reaches the correct lane</li>
+                            <li>😂 May invent new bowling techniques</li>
+                            <li>❤️ Primary objective: make Agent Yelizaveta smile</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <section class="missionSection">
+                    <h3>🎖️ Optional Side Quests</h3>
+                    <div class="checkList">
+                        <p>☐ Make Agent Yelizaveta laugh</p>
+                        <p>☐ Celebrate every strike, even if it is hers</p>
+                        <p>☐ Avoid an excessive number of gutter balls</p>
+                        <p>☐ Capture our first Mission Log photo 📸</p>
+                        <p>☐ Successfully unlock Mission #002</p>
+                    </div>
+                </section>
+
+                <section class="missionSection">
+                    <h3>🎁 Mission Rewards</h3>
+                    <p>🏅 First Date Badge</p>
+                    <p>📸 New Memories Added</p>
+                    <p>❤️ Story Progress +1</p>
+                    <p>🔓 Mission #002 Unlocked</p>
+                </section>
+
+                <section class="missionSection missionReport">
+                    <h3>📋 Mission Report</h3>
+                    <p><strong>Status:</strong> Awaiting Deployment...</p>
+                    <p>Awaiting Agent Yelizaveta's arrival...</p>
+                    <p><strong>Estimated mission success:</strong> 99.9%</p>
+                    <p>
+                        <strong>Reason for the remaining 0.1%:</strong><br>
+                        Agent Mikhail Petrov has never attempted a bowling mission against
+                        Agent Yelizaveta before. The final score is unpredictable, but this
+                        mission is already worth accepting. ❤️
+                    </p>
+                </section>
+
+            </div>
+
+            <button id="closeMission" class="windowCloseButton">Close</button>
+        </div>
+
+        <!-- Open When Letters -->
+        <div id="openWhenWindow" class="desktopWindow hidden">
+
+            <div class="windowTop">
+                <div class="windowDots">
+                    <span class="windowCloseDot"></span>
+                    <span class="windowMinDot"></span>
+                    <span class="windowMaxDot"></span>
+                </div>
+                <h2>💌 Open When...</h2>
+            </div>
+
+            <div class="windowScroll">
+                <div id="letterList" class="letterList">
+                    <button class="letterButton" data-letter="miss">❤️ Open when you miss me</button>
+                    <button class="letterButton" data-letter="amazing">🌸 Open when you need reminding how amazing you are</button>
+                </div>
+
+                <article id="letterContent" class="letterPaper hidden">
+                    <h3 id="letterTitle"></h3>
+                    <div id="letterText"></div>
+                    <button id="backLetters" class="secondaryButton">← Back to letters</button>
+                </article>
+            </div>
+
+            <button id="closeOpenWhen" class="windowCloseButton">Close</button>
+        </div>
 
         <!-- Full Screen Viewer -->
 
