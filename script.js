@@ -237,39 +237,51 @@ function loadQuestion(){
 loadQuestion();
 function playSelectionSound(answer){
 
-    officeAudio.pause();
-    officeAudio.currentTime = 0;
+    [officeAudio, brooklynAudio, gilmoreAudio, hsmAudio].forEach(audio => {
+        if (!audio) return;
+        audio.pause();
+        audio.currentTime = 0;
+    });
 
-    brooklynAudio.pause();
-    brooklynAudio.currentTime = 0;
+    function playClip(audio, startAt, durationMs) {
+        if (!audio) return;
 
-    gilmoreAudio.pause();
-    gilmoreAudio.currentTime = 0;
+        audio.currentTime = startAt;
+        audio.play().catch(() => {});
 
-    hsmAudio.pause();
-    hsmAudio.currentTime = 0;
+        setTimeout(() => {
+            audio.pause();
+            audio.currentTime = 0;
+        }, durationMs);
+    }
 
     switch(answer){
 
         case "The Office":
-            officeAudio.play();
+            // Uploaded clip is 4.27s: "That's what she said!" plus the few seconds after.
+            playClip(officeAudio, 0, 4270);
             break;
 
         case "Brooklyn Nine-Nine":
-            brooklynAudio.play();
+            // One "Nine-Nine!" only.
+            playClip(brooklynAudio, 0, 1500);
             break;
 
         case "Gilmore Girls":
-            gilmoreAudio.play();
+            // Starts just before "I just got hit by a deer!" and keeps the short exchange.
+            playClip(gilmoreAudio, 22.0, 10500);
             break;
 
         case "High School Musical":
+            // Kept unchanged for now: the uploaded wildcats.mp3 contains
+            // the "What team? Wildcats!" chant, not "Get'cha head in the game".
             hsmAudio.play();
             break;
 
     }
 
 }
+
 function nextQuestion(){
 
     currentQuestion++;
@@ -600,7 +612,8 @@ const letterList = document.getElementById("letterList");
 const letterContent = document.getElementById("letterContent");
 const letterTitle = document.getElementById("letterTitle");
 const letterText = document.getElementById("letterText");
-const backLetters = document.getElementById("backLetters");const viewer = document.getElementById("viewer");
+const backLetters = document.getElementById("backLetters");
+const viewer = document.getElementById("viewer");
 const viewerImage = document.getElementById("viewerImage");
 const viewerVideo = document.getElementById("viewerVideo");
 
@@ -1331,3 +1344,183 @@ document.addEventListener("keydown", (event) => {
     }
 
 });
+
+// =====================================================
+// LIZZYOS — INTERACTIVE DATE SCHEDULER
+// =====================================================
+(() => {
+    const $ = id => document.getElementById(id);
+    const FORMSPREE_URL = "https://formspree.io/f/mzdnaree";
+
+    const formatDate = value => {
+        if (!value) return "";
+        const d = new Date(value + "T12:00:00");
+        return new Intl.DateTimeFormat("en-ZA", {weekday:"long", day:"numeric", month:"long", year:"numeric"}).format(d);
+    };
+    const formatTime = value => {
+        if (!value) return "";
+        const [h,m] = value.split(":").map(Number);
+        const d = new Date(); d.setHours(h,m,0,0);
+        return new Intl.DateTimeFormat("en-ZA", {hour:"2-digit", minute:"2-digit"}).format(d);
+    };
+
+    const now = new Date();
+    const today = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+    ["lizzyDateChoice","desktopDateChoice"].forEach(id => { if ($(id)) $(id).min = today; });
+
+    function preview(dateId,timeId,previewId){
+        const date=$(dateId)?.value, time=$(timeId)?.value, box=$(previewId);
+        if(!box) return;
+        if(!date && !time){ box.innerHTML="<span>💗</span><p>Pick a date and time to create the mission.</p>"; return; }
+        if(!date){ box.innerHTML=`<span>📆</span><p>Time selected: <strong>${formatTime(time)}</strong><br>Now pick the day.</p>`; return; }
+        if(!time){ box.innerHTML=`<span>🕐</span><p><strong>${formatDate(date)}</strong><br>Now choose a time.</p>`; return; }
+        box.innerHTML=`<span>🎳</span><p><strong>${formatDate(date)}</strong><br>at <strong>${formatTime(time)}</strong><br><small>Mission: Operation Strike Her Heart ❤️</small></p>`;
+    }
+
+    ["lizzyDateChoice","lizzyTimeChoice"].forEach(id => $(id)?.addEventListener("change",()=>preview("lizzyDateChoice","lizzyTimeChoice","dateChoicePreview")));
+    ["desktopDateChoice","desktopTimeChoice"].forEach(id => $(id)?.addEventListener("change",()=>preview("desktopDateChoice","desktopTimeChoice","desktopDatePreview")));
+
+    async function sendSelection(date,time,statusId,confirmedId,confirmedTextId){
+        const status=$(statusId);
+        if(!date || !time){ if(status) status.textContent="Choose both a date and a time first 😭"; return; }
+        const prettyDate=formatDate(date), prettyTime=formatTime(time);
+        if(status) status.textContent="Sending mission details to Mikhail... 📡";
+        try{
+            const r=await fetch(FORMSPREE_URL,{
+                method:"POST",
+                headers:{"Content-Type":"application/json","Accept":"application/json"},
+                body:JSON.stringify({
+                    subject:"❤️ Lizzy selected a date!",
+                    message:`📅 LIZZYOS DATE SELECTED\n\nDate: ${prettyDate}\nTime: ${prettyTime}\n\nMission: Operation Strike Her Heart ❤️`,
+                    selected_date:prettyDate,
+                    selected_time:prettyTime,
+                    raw_date:date,
+                    raw_time:time
+                })
+            });
+            if(!r.ok) throw new Error("Formspree "+r.status);
+            localStorage.setItem("lizzySelectedDate",date);
+            localStorage.setItem("lizzySelectedTime",time);
+            if(status) status.textContent="Sent! Agent Mikhail has been notified ❤️";
+            if(confirmedId && $(confirmedId)) $(confirmedId).classList.remove("hidden");
+            if(confirmedTextId && $(confirmedTextId)) $(confirmedTextId).textContent=`${prettyDate} • ${prettyTime}`;
+            renderSavedMission();
+            if(typeof unlockAchievement==="function") unlockAchievement("Mission Date Locked In 📅❤️");
+            if(typeof confetti==="function") confetti({particleCount:90,spread:90,origin:{y:.72}});
+        }catch(e){
+            console.error("Date scheduler:",e);
+            if(status) status.textContent="Couldn't send the date right now. Please try again ❤️";
+        }
+    }
+
+    $("confirmLizzyDate")?.addEventListener("click", async ()=>{
+        const b=$("confirmLizzyDate"); if(b)b.disabled=true;
+        await sendSelection($("lizzyDateChoice")?.value,$("lizzyTimeChoice")?.value,"dateSchedulerStatus","confirmedDateCard","confirmedDateText");
+        if(b)b.disabled=false;
+    });
+
+    $("confirmDesktopDate")?.addEventListener("click", async ()=>{
+        const b=$("confirmDesktopDate"); if(b)b.disabled=true;
+        await sendSelection($("desktopDateChoice")?.value,$("desktopTimeChoice")?.value,"desktopDateStatus");
+        if(b)b.disabled=false;
+    });
+
+    $("calendarIcon")?.addEventListener("click",()=>{
+        const d=localStorage.getItem("lizzySelectedDate"), t=localStorage.getItem("lizzySelectedTime");
+        if(d && $("desktopDateChoice")) $("desktopDateChoice").value=d;
+        if(t && $("desktopTimeChoice")) $("desktopTimeChoice").value=t;
+        preview("desktopDateChoice","desktopTimeChoice","desktopDatePreview");
+        renderSavedMission();
+        $("calendarWindow")?.classList.remove("hidden");
+    });
+    ["closeCalendar","calendarRedClose"].forEach(id=>$(id)?.addEventListener("click",()=>$("calendarWindow")?.classList.add("hidden")));
+
+    function renderSavedMission(){
+        const box=$("savedMissionDate"); if(!box)return;
+        const d=localStorage.getItem("lizzySelectedDate"), t=localStorage.getItem("lizzySelectedTime");
+        if(!d || !t){ box.innerHTML='<p class="memoryMessage">No mission date has been locked in yet.</p>'; return; }
+        box.innerHTML=`<div class="savedMissionCard"><span>📌</span><div><small>CURRENT MISSION DATE</small><strong>${formatDate(d)}</strong><p>${formatTime(t)} ❤️</p></div></div>`;
+    }
+
+    const sd=localStorage.getItem("lizzySelectedDate"), st=localStorage.getItem("lizzySelectedTime");
+    if(sd && $("lizzyDateChoice")) $("lizzyDateChoice").value=sd;
+    if(st && $("lizzyTimeChoice")) $("lizzyTimeChoice").value=st;
+    if(sd || st) preview("lizzyDateChoice","lizzyTimeChoice","dateChoicePreview");
+    if(sd && st){
+        $("confirmedDateCard")?.classList.remove("hidden");
+        if($("confirmedDateText")) $("confirmedDateText").textContent=`${formatDate(sd)} • ${formatTime(st)}`;
+    }
+    renderSavedMission();
+
+    const readMe=$("readMeWindow");
+    $("readMeRedClose")?.addEventListener("click",()=>readMe?.classList.add("hidden"));
+    $("readMeYellowMin")?.addEventListener("click",()=>readMe?.classList.toggle("readMeMinimised"));
+    $("readMeGreenMax")?.addEventListener("click",()=>{
+        if(!readMe)return;
+        readMe.classList.remove("readMeMinimised");
+        readMe.classList.toggle("readMeExpanded");
+    });
+})();
+
+
+// =====================================================
+// LIZZYOS — RANDOM CALENDAR MESSAGES
+// A different message is selected whenever the calendar opens.
+// =====================================================
+(() => {
+    const messages = [
+        "Alright Little Miss Attitude 😭❤️ You pick the day, you pick the time, and I’ll handle the rest.",
+        "Agent Yelizaveta, Mission Control requires your availability 🕵️❤️ Pick a date and time to continue the mission.",
+        "Pick a day I get to steal you for a little while 🌸❤️ The when is completely up to you.",
+        "No pressure 😌❤️ You tell me when you’re free, and I’ll take care of everything else.",
+        "Okay, your turn 😂❤️ Date. Time. That’s all Agent Mikhail needs.",
+        "Mikhail has officially surrendered control of the calendar to you 😭📅 Choose wisely.",
+        "⚠️ Mission pending: awaiting availability from one very difficult Agent Yelizaveta. 😂❤️",
+        "Choose wisely… I’m expecting a very important date with a very pretty girl 👀❤️",
+        "The calendar has been opened. There’s no escaping now 😂📅❤️",
+        "Little Miss Attitude has been granted full scheduling privileges. Please use them responsibly 😏❤️",
+        "Your schedule, your choice 💗 Pick whatever day works best for you and I’ll make the rest happen.",
+        "Mission Control is standing by 🫡❤️ All we need now is your preferred date and time."
+    ];
+
+    let lastMessage = sessionStorage.getItem("lizzyLastCalendarMessage") || "";
+
+    function randomMessage() {
+        let options = messages.filter(message => message !== lastMessage);
+        if (!options.length) options = messages;
+        const chosen = options[Math.floor(Math.random() * options.length)];
+        lastMessage = chosen;
+        sessionStorage.setItem("lizzyLastCalendarMessage", chosen);
+        return chosen;
+    }
+
+    function updateCalendarMessage(targetId) {
+        const target = document.getElementById(targetId);
+        if (target) target.textContent = randomMessage();
+    }
+
+    // The celebration scheduler gets a random message when it becomes relevant.
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.addEventListener("click", () => {
+        setTimeout(() => updateCalendarMessage("schedulerRandomMessage"), 100);
+    });
+
+    // Give it a message immediately as a fallback if the celebration is already visible.
+    updateCalendarMessage("schedulerRandomMessage");
+
+    // Desktop "Our Date" app gets a fresh random message every time it opens.
+    const calendarIcon = document.getElementById("calendarIcon");
+    calendarIcon?.addEventListener("click", () => {
+        updateCalendarMessage("desktopSchedulerRandomMessage");
+    });
+
+    // Also refresh when returning to the tab after a while.
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+            const calendarWindow = document.getElementById("calendarWindow");
+            if (calendarWindow && !calendarWindow.classList.contains("hidden")) {
+                updateCalendarMessage("desktopSchedulerRandomMessage");
+            }
+        }
+    });
+})();

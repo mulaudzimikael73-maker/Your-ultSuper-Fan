@@ -408,6 +408,42 @@
 
         </p>
 
+
+        <div id="dateScheduler" class="dateScheduler">
+            <div class="schedulerHeading">
+                <span class="schedulerIcon">📅</span>
+                <div>
+                    <p class="schedulerEyebrow">MISSION SCHEDULING</p>
+                    <h2>Okay Lizzy... pick the date 😭❤️</h2>
+                </div>
+            </div>
+            <p class="schedulerIntro" id="schedulerRandomMessage">Loading mission instructions... ❤️</p>
+
+            <div class="schedulerGrid">
+                <label class="schedulerField">
+                    <span>📆 Choose the day</span>
+                    <div class="dateInputShell"><input id="lizzyDateChoice" type="date"></div>
+                </label>
+                <label class="schedulerField">
+                    <span>🕐 Choose the time</span>
+                    <div class="dateInputShell"><input id="lizzyTimeChoice" type="time"></div>
+                </label>
+            </div>
+
+            <div id="dateChoicePreview" class="dateChoicePreview"><span>💗</span><p>Pick a date and time to create the mission.</p></div>
+            <button id="confirmLizzyDate" class="confirmDateButton">Lock In The Mission ❤️</button>
+            <p id="dateSchedulerStatus" class="dateSchedulerStatus" aria-live="polite"></p>
+
+            <div id="confirmedDateCard" class="confirmedDateCard hidden">
+                <span class="confirmedCheck">✓</span>
+                <div>
+                    <p class="schedulerEyebrow">MISSION CONFIRMED</p>
+                    <h3 id="confirmedDateText"></h3>
+                    <p>Agent Mikhail has been notified. No disappearing from Mission Control now 😭❤️</p>
+                </div>
+            </div>
+        </div>
+
         <div class="riddleGrid">
 
             <div class="riddleCard" data-answer="⛳ Mini Golf">
@@ -539,6 +575,11 @@
 
             </div>
 
+            <div class="desktopIcon" id="calendarIcon">
+                <div class="desktopEmoji">📅</div>
+                <span>Our Date</span>
+            </div>
+
         </div>
 
         <!-- Finder Window -->
@@ -587,7 +628,14 @@
 
 <div id="readMeWindow" class="hidden">
 
-    <h2>❤️ Read Me ❤️</h2>
+    <div class="windowTop readMeWindowTop">
+        <div class="windowDots">
+            <span class="windowCloseDot" id="readMeRedClose" title="Close"></span>
+            <span class="windowMinDot" id="readMeYellowMin" title="Minimise"></span>
+            <span class="windowMaxDot" id="readMeGreenMax" title="Expand"></span>
+        </div>
+        <h2>❤️ Read Me ❤️</h2>
+    </div>
 
     <div id="readMeIntro">
 
@@ -759,6 +807,33 @@
             </div>
 
             <button id="closeOpenWhen" class="windowCloseButton">Close</button>
+        </div>
+
+
+        <!-- Our Date Calendar -->
+        <div id="calendarWindow" class="desktopWindow hidden">
+            <div class="windowTop">
+                <div class="windowDots">
+                    <span class="windowCloseDot" id="calendarRedClose"></span>
+                    <span class="windowMinDot"></span>
+                    <span class="windowMaxDot"></span>
+                </div>
+                <h2>📅 Our Date</h2>
+            </div>
+            <div class="windowScroll calendarDesktopContent">
+                <div class="calendarHeart">❤️</div>
+                <h3>Mission Scheduling</h3>
+                <p id="desktopSchedulerRandomMessage">Loading mission instructions... ❤️</p>
+                <div class="schedulerGrid desktopSchedulerGrid">
+                    <label class="schedulerField"><span>📆 Date</span><div class="dateInputShell"><input id="desktopDateChoice" type="date"></div></label>
+                    <label class="schedulerField"><span>🕐 Time</span><div class="dateInputShell"><input id="desktopTimeChoice" type="time"></div></label>
+                </div>
+                <div id="desktopDatePreview" class="dateChoicePreview"><span>💗</span><p>Select the next mission date.</p></div>
+                <button id="confirmDesktopDate">Send Mission Update ❤️</button>
+                <p id="desktopDateStatus" class="dateSchedulerStatus" aria-live="polite"></p>
+                <div id="savedMissionDate" class="savedMissionDate"></div>
+            </div>
+            <button id="closeCalendar" class="windowCloseButton">Close</button>
         </div>
 
         <!-- Full Screen Viewer -->
