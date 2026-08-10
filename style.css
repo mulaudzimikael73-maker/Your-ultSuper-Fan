@@ -2263,3 +2263,53 @@ color:#ff5ca8;
 .savedMissionCard{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)}
 .savedMissionCard>span{font-size:32px}.savedMissionCard small,.savedMissionCard strong,.savedMissionCard p{display:block}.savedMissionCard small{font-size:9px;letter-spacing:1.3px;opacity:.65}.savedMissionCard strong{margin-top:4px;font-size:14px}.savedMissionCard p{margin:2px 0 0;font-size:12px}
 @media(max-width:650px){.schedulerGrid{grid-template-columns:1fr}.dateScheduler{padding:20px 16px}.schedulerHeading{align-items:flex-start}.schedulerHeading h2{font-size:1.3rem}}
+
+
+/* ==========================================================
+   OUR DATE — DESKTOP FOLDER
+   ========================================================== */
+.calendarFolderEmoji{
+    position:relative;
+    width:64px;
+    height:49px;
+    margin:0 auto 7px;
+    border-radius:7px 7px 9px 9px;
+    background:linear-gradient(180deg,#ffd86f 0%,#f4b83f 100%);
+    box-shadow:0 8px 18px rgba(54,34,10,.22),inset 0 1px rgba(255,255,255,.5);
+    font-size:0 !important;
+}
+.calendarFolderEmoji::before{
+    content:"";
+    position:absolute;
+    left:5px;
+    top:-8px;
+    width:27px;
+    height:12px;
+    border-radius:6px 7px 0 0;
+    background:#f6c451;
+}
+.calendarFolderEmoji::after{
+    content:"";
+    position:absolute;
+    inset:7px 5px 5px;
+    border-radius:5px;
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.02));
+}
+.folderCalendarBadge{
+    position:absolute;
+    z-index:2;
+    right:-8px;
+    bottom:-8px;
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    background:rgba(255,255,255,.94);
+    box-shadow:0 5px 12px rgba(0,0,0,.22);
+    font-size:18px;
+}
+.calendarFolderIcon:hover .calendarFolderEmoji{
+    transform:translateY(-2px);
+}

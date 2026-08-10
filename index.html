@@ -407,43 +407,6 @@
             Here's a little riddle for what's coming next...
 
         </p>
-
-
-        <div id="dateScheduler" class="dateScheduler">
-            <div class="schedulerHeading">
-                <span class="schedulerIcon">📅</span>
-                <div>
-                    <p class="schedulerEyebrow">MISSION SCHEDULING</p>
-                    <h2>Okay Lizzy... pick the date 😭❤️</h2>
-                </div>
-            </div>
-            <p class="schedulerIntro" id="schedulerRandomMessage">Loading mission instructions... ❤️</p>
-
-            <div class="schedulerGrid">
-                <label class="schedulerField">
-                    <span>📆 Choose the day</span>
-                    <div class="dateInputShell"><input id="lizzyDateChoice" type="date"></div>
-                </label>
-                <label class="schedulerField">
-                    <span>🕐 Choose the time</span>
-                    <div class="dateInputShell"><input id="lizzyTimeChoice" type="time"></div>
-                </label>
-            </div>
-
-            <div id="dateChoicePreview" class="dateChoicePreview"><span>💗</span><p>Pick a date and time to create the mission.</p></div>
-            <button id="confirmLizzyDate" class="confirmDateButton">Lock In The Mission ❤️</button>
-            <p id="dateSchedulerStatus" class="dateSchedulerStatus" aria-live="polite"></p>
-
-            <div id="confirmedDateCard" class="confirmedDateCard hidden">
-                <span class="confirmedCheck">✓</span>
-                <div>
-                    <p class="schedulerEyebrow">MISSION CONFIRMED</p>
-                    <h3 id="confirmedDateText"></h3>
-                    <p>Agent Mikhail has been notified. No disappearing from Mission Control now 😭❤️</p>
-                </div>
-            </div>
-        </div>
-
         <div class="riddleGrid">
 
             <div class="riddleCard" data-answer="⛳ Mini Golf">
@@ -575,8 +538,10 @@
 
             </div>
 
-            <div class="desktopIcon" id="calendarIcon">
-                <div class="desktopEmoji">📅</div>
+            <div class="desktopIcon calendarFolderIcon" id="calendarIcon">
+                <div class="desktopEmoji calendarFolderEmoji">
+                    <span class="folderCalendarBadge">📅</span>
+                </div>
                 <span>Our Date</span>
             </div>
 
@@ -818,11 +783,11 @@
                     <span class="windowMinDot"></span>
                     <span class="windowMaxDot"></span>
                 </div>
-                <h2>📅 Our Date</h2>
+                <h2>📁 Our Date</h2>
             </div>
             <div class="windowScroll calendarDesktopContent">
                 <div class="calendarHeart">❤️</div>
-                <h3>Mission Scheduling</h3>
+                <h3>Pick Our Date ❤️</h3>
                 <p id="desktopSchedulerRandomMessage">Loading mission instructions... ❤️</p>
                 <div class="schedulerGrid desktopSchedulerGrid">
                     <label class="schedulerField"><span>📆 Date</span><div class="dateInputShell"><input id="desktopDateChoice" type="date"></div></label>

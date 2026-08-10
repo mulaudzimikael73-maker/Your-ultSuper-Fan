@@ -1524,3 +1524,36 @@ document.addEventListener("keydown", (event) => {
         }
     });
 })();
+
+
+// =====================================================
+// LIZZYOS — CALENDAR-ONLY CLEAN START
+// Date selection is available ONLY inside the "Our Date" desktop folder.
+// =====================================================
+(() => {
+    // Remove any legacy post-YES scheduler if an older HTML fragment is ever cached/injected.
+    document.getElementById("dateScheduler")?.remove();
+
+    // Start the real calendar blank on this release.
+    // This intentionally clears the developer/test selection once.
+    const CLEAN_VERSION = "calendar-clean-v1";
+    if (localStorage.getItem("lizzyCalendarCleanVersion") !== CLEAN_VERSION) {
+        localStorage.removeItem("lizzySelectedDate");
+        localStorage.removeItem("lizzySelectedTime");
+        localStorage.setItem("lizzyCalendarCleanVersion", CLEAN_VERSION);
+    }
+
+    const clearCalendarInputs = () => {
+        const date = document.getElementById("desktopDateChoice");
+        const time = document.getElementById("desktopTimeChoice");
+        if (!localStorage.getItem("lizzySelectedDate") && date) date.value = "";
+        if (!localStorage.getItem("lizzySelectedTime") && time) time.value = "";
+    };
+
+    clearCalendarInputs();
+
+    // Ensure first opening is blank after the clean reset.
+    document.getElementById("calendarIcon")?.addEventListener("click", () => {
+        setTimeout(clearCalendarInputs, 0);
+    });
+})();
