@@ -1546,6 +1546,111 @@ document.addEventListener("keydown", (event) => {
 
 
 // =====================================================
+// LIZZYOS — LIVING DESKTOP MERGE
+// Built on top of the current Quiz + Game version.
+// =====================================================
+(() => {
+    const $ = id => document.getElementById(id);
+    const qsa = sel => [...document.querySelectorAll(sel)];
+    const store = localStorage;
+
+    const moods = {
+        "Lizzy": {label:"💗 Mood: Soft Pink", cls:"mood-lizzy", model:"Lizzy Pro 💗", quote:"Powered by kindness, pink, pasta and the ability to make ordinary days better."},
+        "Little Miss Attitude": {label:"😏 Mood: Maximum Attitude", cls:"mood-attitude", model:"Little Miss Attitude Pro Max 😏", quote:"Warning: sass is a permanent system feature and cannot be uninstalled."},
+        "Agent Yelizaveta": {label:"🕵️ Mood: Classified", cls:"mood-agent", model:"Agent Yelizaveta — Classified Edition", quote:"Security clearance confirmed. Bowling intelligence remains deeply concerning."}
+    };
+    const warnings = {
+        "Lizzy":[["Beauty Limit Reached","LizzyOS cannot calculate a higher value. Please stop being so pretty. 💗"],["Cuteness Alert","A suspicious amount of cuteness has been detected."]],
+        "Little Miss Attitude":[["Attitude Spike Detected","Sass levels have exceeded the recommended daily allowance. 😏"],["Low Patience Warning","Mikhail should proceed with extreme caution."]],
+        "Agent Yelizaveta":[["SECURITY ALERT","Agent Mikhail has been detected nearby. Threat level: probably annoying."],["CLASSIFIED WARNING","Excessive beauty has compromised facial-recognition accuracy."]]
+    };
+    const genericWarnings = [["SYSTEM ERROR","Beauty value exceeds supported range."],["BOWLING ALERT","Opponent skill level detected: unnecessarily high. 🎳"],["MEMORY WARNING","Too many cute moments are being stored. Extra heart space allocated. ❤️"]];
+
+    const persona = () => store.getItem("lizzyPersona") || "Agent Yelizaveta";
+
+    function applyMood(){
+        const p=persona(), m=moods[p]||moods["Agent Yelizaveta"];
+        document.body.classList.remove("mood-lizzy","mood-attitude","mood-agent");
+        document.body.classList.add(m.cls);
+        if($("desktopMoodLabel")) $("desktopMoodLabel").textContent=m.label;
+        if($("aboutLizzyModel")) $("aboutLizzyModel").textContent=m.model;
+        if($("aboutCurrentUser")) $("aboutCurrentUser").textContent=p;
+        if($("aboutQuote")) $("aboutQuote").textContent=m.quote;
+        if($("mailFrom")) $("mailFrom").value=p;
+        if($("composeGreeting")) $("composeGreeting").textContent=p==="Agent Yelizaveta"?"Secure Message to Agent Mikhail ❤️":p==="Little Miss Attitude"?"Fine... message Mikhail 🙄❤️":"Message Mikhail ❤️";
+    }
+    qsa("[data-persona]").forEach(b=>b.addEventListener("click",()=>setTimeout(applyMood,0)));
+
+    // Night mode: automatic after 19:00, with manual toggle.
+    let manualNight=store.getItem("lizzyNightMode");
+    const autoNight=()=>{const h=new Date().getHours();return h>=19||h<6};
+    function applyNight(force){
+        const night=typeof force==="boolean"?force:manualNight==="on"?true:manualNight==="off"?false:autoNight();
+        document.body.classList.toggle("lizzy-night",night);
+        if($("nightStatus")) $("nightStatus").textContent=night?"🌙 Night":"☀️ Day";
+        if($("nightModeEmoji")) $("nightModeEmoji").textContent=night?"☀️":"🌙";
+    }
+    $("nightModeIcon")?.addEventListener("click",()=>{const next=!document.body.classList.contains("lizzy-night");manualNight=next?"on":"off";store.setItem("lizzyNightMode",manualNight);applyNight(next)});
+    $("nightStatus")?.addEventListener("dblclick",()=>{manualNight=null;store.removeItem("lizzyNightMode");applyNight();showWarning("Automatic Night Mode","LizzyOS will switch automatically after 7 PM. 🌙")});
+
+    // About
+    $("aboutLizzyIcon")?.addEventListener("click",()=>{applyMood();$("aboutLizzyWindow")?.classList.remove("hidden")});
+    ["closeAboutLizzy","aboutLizzyRedClose"].forEach(id=>$(id)?.addEventListener("click",()=>$("aboutLizzyWindow")?.classList.add("hidden")));
+
+    // Mail
+    const inbox=[
+        {id:"welcome",from:"Mikhail Petrov",subject:"Just in case you forgot ❤️",date:"Pinned",body:"You are kind, smart, beautiful, stunning and one of my favourite people to annoy. Some facts shouldn't be allowed to expire."},
+        {id:"mission",from:"Agent Mikhail Petrov",subject:"Mission Control Update 🕵️",date:"Classified",body:"Agent Yelizaveta: your current mission is to continue being suspiciously good at bowling while pretending this is normal behaviour."}
+    ];
+    const readSet=()=>new Set(JSON.parse(store.getItem("lizzyMailRead")||"[]"));
+    function updateUnread(){
+        const n=inbox.filter(m=>!readSet().has(m.id)).length;
+        if($("mailUnreadBadge")){$("mailUnreadBadge").textContent=n;$("mailUnreadBadge").classList.toggle("hidden",n===0)}
+        if($("mailInboxCount")) $("mailInboxCount").textContent=n;
+    }
+    function renderInbox(){
+        const list=$("mailInboxList"); if(!list)return; const read=readSet();
+        list.innerHTML=inbox.map(m=>`<article class="mailMessage ${read.has(m.id)?"":"unread"}" data-lmail="${m.id}"><div class="mailMessageTop"><strong>${m.from}</strong><span>${m.date}</span></div><h4>${m.subject}</h4><p>${m.body}</p></article>`).join("");
+        qsa("[data-lmail]").forEach(card=>card.onclick=()=>{const r=readSet();r.add(card.dataset.lmail);store.setItem("lizzyMailRead",JSON.stringify([...r]));card.classList.remove("unread");updateUnread()});
+        updateUnread();
+    }
+    const sent=()=>JSON.parse(store.getItem("lizzySentMail")||"[]");
+    function renderSent(){const l=$("mailSentList");if(!l)return;const s=sent();l.innerHTML=s.length?s.map(m=>`<article class="mailMessage"><div class="mailMessageTop"><strong>${m.from}</strong><span>${m.date}</span></div><h4>${m.subject||"No subject"}</h4><p>${m.body}</p></article>`).join(""):`<div class="emptyMail">No messages sent from this device yet. 💗</div>`}
+    function mailView(v){
+        ["inbox","compose","sent"].forEach(n=>{const id="mail"+n[0].toUpperCase()+n.slice(1)+"View";$(id)?.classList.toggle("hidden",n!==v)});
+        qsa(".mailNav").forEach(b=>b.classList.toggle("active",b.dataset.mailView===v));
+        if(v==="sent")renderSent(); if(v==="compose")applyMood();
+    }
+    qsa("[data-mail-view]").forEach(b=>b.onclick=()=>mailView(b.dataset.mailView));
+    $("mailIcon")?.addEventListener("click",()=>{applyMood();renderInbox();mailView("inbox");$("mailWindow")?.classList.remove("hidden")});
+    ["closeMail","mailRedClose"].forEach(id=>$(id)?.addEventListener("click",()=>$("mailWindow")?.classList.add("hidden")));
+
+    $("sendLizzyMail")?.addEventListener("click",async()=>{
+        const from=persona(),subject=($("mailSubject")?.value||"").trim(),body=($("mailBody")?.value||"").trim(),status=$("mailSendStatus"),button=$("sendLizzyMail");
+        if(!body){if(status)status.textContent="Write something first 😭";return}
+        if(button)button.disabled=true;if(status)status.textContent="Sending securely to Mikhail...";
+        try{
+            const r=await fetch("https://formspree.io/f/mzdnaree",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({message:`💌 LizzyOS message from ${from}\nSubject: ${subject||"(No subject)"}\n\n${body}`,sender:from,subject:subject||"LizzyOS Message"})});
+            if(!r.ok)throw new Error("send failed");
+            const s=sent();s.unshift({from,subject,body,date:new Date().toLocaleString("en-ZA",{dateStyle:"medium",timeStyle:"short"})});store.setItem("lizzySentMail",JSON.stringify(s.slice(0,30)));
+            $("mailSubject").value="";$("mailBody").value="";if(status)status.textContent="Sent to Mikhail ❤️";showWarning("Message Delivered 💌","Mikhail has officially been notified.");
+        }catch(e){if(status)status.textContent="Couldn't send right now. Try again in a moment."}finally{if(button)button.disabled=false}
+    });
+
+    // Fake warnings
+    let wt;
+    function showWarning(title,message){const w=$("fakeWarning");if(!w)return;clearTimeout(wt);$("warningTitle").textContent=title;$("warningMessage").textContent=message;w.classList.remove("hidden");requestAnimationFrame(()=>w.classList.add("show"));wt=setTimeout(hideWarning,6500)}
+    function hideWarning(){const w=$("fakeWarning");if(!w)return;w.classList.remove("show");setTimeout(()=>w.classList.add("hidden"),350)}
+    $("dismissWarning")?.addEventListener("click",hideWarning);
+    function randomWarning(){const opts=[...genericWarnings,...(warnings[persona()]||[])],x=opts[Math.floor(Math.random()*opts.length)];showWarning(x[0],x[1])}
+    setTimeout(()=>{if($("desktopArea")&&!$("desktopArea").classList.contains("hidden"))randomWarning()},22000);
+    setInterval(()=>{if($("desktopArea")&&!$("desktopArea").classList.contains("hidden")&&Math.random()<.55)randomWarning()},65000);
+
+    renderInbox();renderSent();applyMood();applyNight();setInterval(()=>{if(!manualNight)applyNight()},60000);
+})();
+
+
+// =====================================================
 // OUR DATE FOLDER — RANDOM MESSAGES + CLEAN FIRST RUN
 // =====================================================
 (() => {
